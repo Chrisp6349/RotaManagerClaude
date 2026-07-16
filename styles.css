@@ -1,0 +1,69 @@
+/* Cardiothoracic Theatre SODP Allocations - main stylesheet
+   Extracted as-is from the original single-file app. No visual changes. */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    padding: 15px;
+}
+
+h1 {
+    text-align: center;
+    color: #1f4e79;
+}
+
+.panel {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+/* Weekday allocation table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    margin-bottom: 15px;
+    table-layout: fixed;
+}
+
+.theatre-col { width: 11%; }
+.support-col { width: 12%; }
+.oncall-col  { width: 12%; }
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #1f4e79;
+    color: #fff;
+}
+
+.daycell {
+    font-weight: bold;
+    background: #e8f0fa;
+}
+
+/* Weekend allocation table */
+.weekend-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.weekend-day { width: 16%; }
+.weekend-col { width: 28%; }
+
+select {
+    width: 100%;
+    margin: 2px 0;
+    padding: 3px;
+}
+
+button {
+    padding: 8px 12px;
+    margin-left: 8px;
+}
