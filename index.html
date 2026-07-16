@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cardiothoracic Theatre SODP Allocations</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<h1>Cardiothoracic Theatre SODP Allocations</h1>
+
+<div class="panel">
+    Week Commencing (Monday):
+    <input type="date" id="weekDate">
+    <button onclick="viewerMode()">👁 Open Viewer</button>
+    <button onclick="publishViewer()">📤 Publish Viewer</button>
+    <button onclick="printFriendlyView()">🖨 Print Preview</button>
+    <button id="loadBtn" onclick="loadWeek()">📂 Load Rota</button>
+    <button id="saveBtn" onclick="save()">💾 Save Rota</button>
+    <button onclick="clearWeek()">Clear All Selections</button>
+</div>
+
+<div id="weekdayRota"></div>
+<div class="panel"><div id="weekendRota"></div></div>
+
+<!-- Load order matters: each file depends on globals declared in the
+     ones before it (config -> state -> render -> data -> print/viewer -> main). -->
+<script src="js/config.js"></script>
+<script src="js/state.js"></script>
+<script src="js/render.js"></script>
+<script src="js/data.js"></script>
+<script src="js/print-preview.js"></script>
+<script src="js/viewer-publish.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
