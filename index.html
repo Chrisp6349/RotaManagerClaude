@@ -60,6 +60,7 @@
                     <input type="date" id="weekDate">
                     <button class="stepper" onclick="stepWeek(-7)" aria-label="Previous week">&#8249;</button>
                     <button class="stepper" onclick="stepWeek(7)" aria-label="Next week">&#8250;</button>
+                    <span id="dirtyBadge" class="dirty-badge">&#9679; Unsaved changes</span>
                 </div>
             </div>
             <div class="actionbar-buttons">
@@ -79,7 +80,7 @@
             </div>
         </section>
 
-        <p class="notice">&#9432; Changes are stored when you press <b>Save Rota</b> &mdash; publishing updates the viewer separately.</p>
+        <p class="notice" id="noticeBar">&#9432; Changes are stored when you press <b>Save Rota</b> &mdash; publishing updates the viewer separately.</p>
 
         <!-- Weekday allocations -->
         <section class="card">
