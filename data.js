@@ -2,14 +2,81 @@
  * data.js
  * -------
  * Reads and writes rota data to/from the Google Sheets backend (via the
- * Apps Script Web App at API_URL), and handles the small UI feedback
- * (button text/colour flashes) that confirms a load or save happened.
+ * Apps Script Web App at API_URL), plus the safety and feedback layer:
+ * unsaved-changes tracking, loading state, and save/publish messaging.
  */
+
+// ---------------------------------------------------------------------------
+// Unsaved-changes tracking
+// ---------------------------------------------------------------------------
+
+// True whenever the on-screen rota differs from what was last loaded/saved.
+let dirty = false;
+
+// The week whose data is currently on screen - used to snap the date picker
+// back if the user cancels a switch away from unsaved changes.
+let loadedWeek = null;
+
+function markDirty() {
+    dirty = true;
+    updateDirtyBadge();
+}
+
+function clearDirty() {
+    dirty = false;
+    updateDirtyBadge();
+}
+
+function updateDirtyBadge() {
+    const b = document.getElementById("dirtyBadge");
+    if (b) b.style.display = dirty ? "inline-flex" : "none";
+}
+
+// Warn before the tab is closed or reloaded with unsaved changes.
+window.addEventListener("beforeunload", (e) => {
+    if (dirty) {
+        e.preventDefault();
+        e.returnValue = "";
+    }
+});
+
+// ---------------------------------------------------------------------------
+// Loading state
+// ---------------------------------------------------------------------------
+
+// Dims the grids and blocks clicks while a week is being fetched, so stale
+// data can't be edited during the load.
+function setLoading(on) {
+    document.body.classList.toggle("loading-week", on);
+}
+
+// ---------------------------------------------------------------------------
+// Status line under the toolbar
+// ---------------------------------------------------------------------------
+
+function setNotice(html) {
+    const n = document.getElementById("noticeBar");
+    if (n) n.innerHTML = html;
+}
+
+// ---------------------------------------------------------------------------
+// Load / save / clear
+// ---------------------------------------------------------------------------
 
 // Loads the selected week's rota from Google Sheets and re-renders.
 // Remembers the selected week in localStorage so it's pre-filled next visit.
+// If there are unsaved changes, asks first - cancelling snaps the date
+// picker back to the week that's actually on screen.
 async function loadWeek() {
+    if (dirty && loadedWeek !== null && weekInput.value !== loadedWeek) {
+        if (!confirm("You have UNSAVED changes on the week commencing " + loadedWeek + ".\n\nSwitching weeks will discard them.\n\nDiscard changes and switch?")) {
+            weekInput.value = loadedWeek;
+            return;
+        }
+    }
+
     localStorage.setItem("selectedMonday", weekInput.value);
+    setLoading(true);
     try {
         const r = await fetch(API_URL + "?week=" + weekInput.value);
         rota = await r.json();
@@ -17,7 +84,11 @@ async function loadWeek() {
         console.log(e);
         rota = {};
     }
+    setLoading(false);
+    loadedWeek = weekInput.value;
+    clearDirty();
     render();
+    setNotice("&#9432; Changes are stored when you press <b>Save Rota</b> &mdash; publishing updates the viewer separately.");
 
     const b = document.getElementById("loadBtn");
     if (b) {
@@ -54,7 +125,9 @@ async function save() {
     } catch (e) {
         console.log(e);
     }
+    clearDirty();
     render();
+    setNotice("&#10003; Saved &mdash; the live viewer is <b>not</b> updated until you press <b>Publish to Viewer</b>.");
 
     const b = document.getElementById("saveBtn");
     if (b) {
@@ -82,10 +155,10 @@ async function clearWeek() {
     }
 }
 
-
 // Updates in-memory rota state when a dropdown changes and re-renders,
 // so the "already used today" greying-out in makeSelect() stays current.
 function handleChange(sel) {
     rota[sel.dataset.key] = sel.value;
+    markDirty();
     render();
 }
