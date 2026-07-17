@@ -29,14 +29,22 @@ async function loadWeek() {
 weekInput.onchange = loadWeek;
 
 // Saves the current on-screen selections back to Google Sheets.
+// Rebuilds the week's data purely from what is on screen, rather than
+// layering on top of whatever was loaded - this stops "ghost" entries
+// (keys from older versions of the app, e.g. "Monday_support") being
+// carried forward forever and wrongly hiding names from the dropdowns.
 async function save() {
+    const fresh = {};
+
     document.querySelectorAll("select").forEach(s => {
-        rota[s.dataset.key] = s.value;
+        fresh[s.dataset.key] = s.value;
     });
 
     document.querySelectorAll('input[type="checkbox"][data-key]').forEach(c => {
-        rota[c.dataset.key] = c.checked;
+        fresh[c.dataset.key] = c.checked;
     });
+
+    rota = fresh;
 
     try {
         await fetch(API_URL, {
