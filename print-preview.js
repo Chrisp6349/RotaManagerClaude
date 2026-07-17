@@ -68,27 +68,28 @@ body{font-family:Arial,Helvetica,sans-serif;margin:24px;color:#111}
 /* Header band - compact so the tables get the page */
 .header{display:flex;align-items:center;gap:14px;border-bottom:2px solid #111;
   padding-bottom:6px;margin-bottom:8px}
-.logo{height:44px}
+.logo{height:50px}
 .header-text{flex:1;text-align:center}
-.header-text h1{margin:0;font-size:17px;letter-spacing:.02em}
-.header-sub{margin:1px 0 0;font-size:11px;color:#444}
-.header-week{margin:3px 0 0;font-size:13px;font-weight:700}
+.header-text h1{margin:0;font-size:19px;letter-spacing:.02em}
+.header-sub{margin:2px 0 0;font-size:13px;color:#444}
+.header-week{margin:4px 0 0;font-size:16px;font-weight:700}
 
-/* Tables - sized so weekday + weekend fit one A4 landscape sheet */
-table{width:100%;border-collapse:collapse;margin-bottom:8px}
-th{background:#fff;color:#111;font-size:10px;letter-spacing:.06em;
-  text-transform:uppercase;text-align:center;padding:4px 5px;
+/* Tables - sized so weekday + weekend fill one A4 landscape sheet */
+table{width:100%;border-collapse:collapse;margin-bottom:10px}
+th{background:#fff;color:#111;font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;text-align:center;padding:6px 5px;
   border:1px solid #666;border-bottom:3px double #111}
-td{border:1px solid #666;padding:2px 4px;vertical-align:top}
+td{border:1px solid #666;padding:3px 5px;vertical-align:top}
 tr:nth-child(even) td{background:#F1F1F1}
 
 /* Day cells anchor each row */
-.daycell{font-weight:800;font-size:11px;text-align:center;background:#E2E2E2 !important;
+.daycell{font-weight:800;font-size:13px;text-align:center;background:#E2E2E2 !important;
   border-right:2px solid #111;width:8%}
 
 /* Values that replace the dropdowns - empty slots collapse so the
-   filled ones can be bigger without taller boxes */
-td div{font-weight:700;font-size:12px;text-align:center;padding:0;line-height:1.2}
+   filled ones can be bigger without taller boxes. Uppercase is
+   display-only: the stored names are unchanged. */
+td div{font-weight:700;font-size:13px;text-align:center;padding:0;line-height:1.25;text-transform:uppercase}
 td div:empty{display:none}
 
 /* On Call column: heaviest ink on the page - it's what people look for */
@@ -96,7 +97,7 @@ table:first-of-type td:last-child{border-left:2px solid #111}
 table:first-of-type th:last-child{border-left:2px solid #111}
 
 h2{margin:2px 0}
-.printed{margin-top:4px;text-align:right;font-size:9px;color:#555}
+.printed{margin-top:6px;text-align:right;font-size:10px;color:#555}
 
 @media print{
   .toolbar{display:none}
@@ -118,7 +119,7 @@ h2{margin:2px 0}
         const d = p.document.createElement('div');
         d.textContent = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : '';
         d.style.fontWeight = 'bold';
-        d.style.fontSize = '12px';   // sized so a full week fits one A4 landscape sheet
+        d.style.fontSize = '13px';   // sized so a full week fills one A4 landscape sheet
         d.style.textAlign = 'center';
         sel.replaceWith(d);
     });
@@ -133,7 +134,7 @@ h2{margin:2px 0}
             const span = p.document.createElement("div");
             span.textContent = "FROM HOME";
             span.style.fontWeight = "bold";
-            span.style.fontSize = "10px";
+            span.style.fontSize = "11px";
             span.style.textAlign = "center";
             cb.parentElement.replaceWith(span);
         } else {
