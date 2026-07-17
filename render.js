@@ -59,10 +59,18 @@ function theatreCell(day, p) {
 
 // Rebuilds both the weekday and weekend tables from the current `rota`
 // state and writes them into the page.
+// True when the date `i` days after the selected Monday is today - used to
+// highlight the current day's row so it's found at a glance.
+function isToday(i) {
+    let d = new Date(weekInput.value);
+    d.setDate(d.getDate() + i);
+    return d.toISOString().split("T")[0] === new Date().toISOString().split("T")[0];
+}
+
 function render() {
     let h = `<table><tr><th>Day</th><th class="theatre-col">Theatre 1</th><th class="theatre-col">Theatre 2</th><th class="theatre-col">Theatre 4</th><th class="theatre-col">Theatre 5</th><th class="theatre-col">Cath Lab</th><th class="support-col">Support</th><th class="oncall-col">On Call</th></tr>`;
 
-    weekdays.forEach((d, i) => h += `<tr><td class='daycell'>${dayLabel(i)}</td><td>${theatreCell(d, "t1")}</td><td>${theatreCell(d, "t2")}</td><td>${theatreCell(d, "t4")}</td><td>${theatreCell(d, "t5")}</td><td>${theatreCell(d, "cath")}</td><td>
+    weekdays.forEach((d, i) => h += `<tr${isToday(i) ? " class='today'" : ""}><td class='daycell'>${dayLabel(i)}</td><td>${theatreCell(d, "t1")}</td><td>${theatreCell(d, "t2")}</td><td>${theatreCell(d, "t4")}</td><td>${theatreCell(d, "t5")}</td><td>${theatreCell(d, "cath")}</td><td>
         ${makeSelect(d, "support1", odps, "odp")}
         ${makeSelect(d, "support2", odps, "odp")}
         ${makeSelect(d, "support3", odps, "odp")}
@@ -77,7 +85,7 @@ function render() {
     document.querySelectorAll('input[type="checkbox"][data-key]').forEach(c => c.checked = !!rota[c.dataset.key]);
 
     let w = `<table class="weekend-table"><tr><th class="weekend-day">Day</th><th class="weekend-col">On Call ODP</th><th class="weekend-col">On Call Anaesthetist</th><th class="weekend-col">Waiting List</th></tr>`;
-    weekends.forEach((d, i) => w += `<tr><td class='daycell'>${dayLabel(i + 5)}</td><td>${makeSelect(d, "oncall_odp1", odps, "odp", false)}${makeSelect(d, "oncall_session1", ["ALL DAY", "AM", "PM"], "list", false)}<br>${makeSelect(d, "oncall_odp2", odps, "odp", false)}${makeSelect(d, "oncall_session2", ["ALL DAY", "AM", "PM"], "list", false)}</td><td>${makeSelect(d, "oncall_anaes", anaes, "anaes", false)}</td><td>${makeSelect(d, "wl_odp", odps, "odp", false)}${makeSelect(d, "wl_anaes", anaes, "anaes", false)}</td></tr>`);
+    weekends.forEach((d, i) => w += `<tr${isToday(i + 5) ? " class='today'" : ""}><td class='daycell'>${dayLabel(i + 5)}</td><td>${makeSelect(d, "oncall_odp1", odps, "odp", false)}${makeSelect(d, "oncall_session1", ["ALL DAY", "AM", "PM"], "list", false)}<br>${makeSelect(d, "oncall_odp2", odps, "odp", false)}${makeSelect(d, "oncall_session2", ["ALL DAY", "AM", "PM"], "list", false)}</td><td>${makeSelect(d, "oncall_anaes", anaes, "anaes", false)}</td><td>${makeSelect(d, "wl_odp", odps, "odp", false)}${makeSelect(d, "wl_anaes", anaes, "anaes", false)}</td></tr>`);
 
     document.getElementById("weekendRota").innerHTML = w + "</table>";
 }
