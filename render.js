@@ -25,7 +25,7 @@ function makeSelect(day, field, list, type, restricted = true) {
         current = rota[key] || "",
         u = used(day);
     let h = `<select data-key="${key}" onchange="handleChange(this)"><option value=""></option>`;
-    list.forEach(n => {
+   [...list].sort().forEach(n => {
         let hide = false;
         if (restricted) {
             if (type == "odp") hide = u.o.includes(n) && n !== current;
